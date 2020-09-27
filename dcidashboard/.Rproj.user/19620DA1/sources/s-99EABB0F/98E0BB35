@@ -1,0 +1,32 @@
+{
+    "id": "98E0BB35",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1601240909760.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "expression": "urls2019list",
+        "caption": "urls2019list",
+        "totalObservations": "104",
+        "displayedObservations": "104",
+        "variables": "1",
+        "cacheKey": "DF683AF4",
+        "object": "urls2019list",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=urls2019list&cache_key=DF683AF4&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 7597692836504612196,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1601240909760,
+    "read_only": false,
+    "read_only_alternatives": []
+}

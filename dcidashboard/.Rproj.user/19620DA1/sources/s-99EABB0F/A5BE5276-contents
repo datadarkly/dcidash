@@ -1,0 +1,67 @@
+library(rvest)
+library(dplyr)
+library(xml2)
+library(stringr)
+library(openxlsx)
+
+# url_list <- list("2019-dci-world-championship-finals", "2018-dci-world-championship-finals")
+
+urls2019manual <- read_excel("Data/urls2019manual.xlsx")
+urlstem <- "https://www.dci.org/scores/final-scores/"
+
+urls2019list <- list(urls2019manual)[[1]]
+
+df_total = data.frame()
+
+yearlist <- c("2019", "2018", "2017", "2016", "2015", "2014", "2013")
+  
+
+for(year in yearlist){
+  for (urlbranch in urls2019list[[1]]){
+    
+  skip_to_next <- FALSE
+  
+  urlbranch <- urlbranch %>% 
+    str_remove(urlstem) %>% 
+    str_replace("2019", toString(year))
+  
+  urlfull <- paste(urlstem,urlbranch, sep="")
+  print(paste("Now scraping", urlbranch))
+  
+  tryCatch(
+    dcipagehtml <- read_html(urlfull), error = function(e) {skip_to_next <- TRUE})
+    if(skip_to_next) { next }
+  
+    showmeta <- dcipagehtml %>% 
+      html_nodes('body') %>% 
+      xml_find_all("//span") %>% 
+      html_text()
+    
+    showtitle <- dcipagehtml %>% 
+      html_nodes('div.title') %>% 
+      html_text()
+    
+    tbls <- html_nodes(dcipagehtml, "table") %>% 
+      html_table()
+    
+    tryCatch(
+    df <- tbls[[1]] %>% 
+      slice(2:13) %>% 
+      data.frame() %>% 
+      mutate(url = urlbranch) %>% 
+      filter(Place != "Powered by") %>% 
+      filter(Place != "Not scored") %>% 
+      mutate(showdate = showmeta[42]) %>% 
+      mutate(showloc = showmeta[43]) %>% 
+      mutate(showtitle = showtitle), error = function(e) {skip_to_next <- TRUE})
+      if(skip_to_next) { next }
+    
+    df_total <- rbind(df_total, df)
+  }
+}
+
+write.xlsx(df_total, file = "scrapedscores.xlsx",
+           sheetName = "SCORES")
+
+
+
